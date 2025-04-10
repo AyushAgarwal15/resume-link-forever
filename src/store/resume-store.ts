@@ -1,3 +1,4 @@
+
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -115,7 +116,18 @@ export interface ResumeState {
 
 const generateId = () => Math.random().toString(36).substring(2, 9);
 
-const initialState: ResumeState = {
+// Define a type for just the state data (without the actions)
+type ResumeStateData = Omit<ResumeState, 
+  'updatePersonalInfo' | 'addWorkExperience' | 'updateWorkExperience' | 'removeWorkExperience' |
+  'addEducation' | 'updateEducation' | 'removeEducation' | 'addSkill' | 'updateSkill' | 
+  'removeSkill' | 'addCertification' | 'updateCertification' | 'removeCertification' |
+  'addProject' | 'updateProject' | 'removeProject' | 'addLanguage' | 'updateLanguage' |
+  'removeLanguage' | 'updateHobbies' | 'updateAwards' | 'addReference' | 'updateReference' |
+  'removeReference' | 'resetStore'
+>;
+
+// Create the initial state with only the data properties
+const initialStateData: ResumeStateData = {
   // Personal Information
   name: 'Ayush Agarwal',
   title: 'Associate Software Engineer',
@@ -177,73 +189,73 @@ const initialState: ResumeState = {
       id: generateId(),
       name: 'HTML',
       level: 5,
-      type: 'hard' as const
+      type: 'hard'
     },
     {
       id: generateId(),
       name: 'CSS',
       level: 5,
-      type: 'hard' as const
+      type: 'hard'
     },
     {
       id: generateId(),
       name: 'JavaScript',
       level: 5,
-      type: 'hard' as const
+      type: 'hard'
     },
     {
       id: generateId(),
       name: 'React.js',
       level: 5,
-      type: 'hard' as const
+      type: 'hard'
     },
     {
       id: generateId(),
       name: 'Next.js',
       level: 4,
-      type: 'hard' as const
+      type: 'hard'
     },
     {
       id: generateId(),
       name: 'TypeScript',
       level: 4,
-      type: 'hard' as const
+      type: 'hard'
     },
     {
       id: generateId(),
       name: 'Tailwind CSS',
       level: 4,
-      type: 'hard' as const
+      type: 'hard'
     },
     {
       id: generateId(),
       name: 'Redux',
       level: 4,
-      type: 'hard' as const
+      type: 'hard'
     },
     {
       id: generateId(),
       name: 'Git',
       level: 4,
-      type: 'hard' as const
+      type: 'hard'
     },
     {
       id: generateId(),
       name: 'Problem Solving',
       level: 4,
-      type: 'soft' as const
+      type: 'soft'
     },
     {
       id: generateId(),
       name: 'Communication',
       level: 4,
-      type: 'soft' as const
+      type: 'soft'
     },
     {
       id: generateId(),
       name: 'Teamwork',
       level: 4,
-      type: 'soft' as const
+      type: 'soft'
     }
   ],
   certifications: [
@@ -315,7 +327,7 @@ const initialState: ResumeState = {
 export const useResumeStore = create<ResumeState>()(
   persist(
     (set) => ({
-      ...initialState,
+      ...initialStateData,
       
       updatePersonalInfo: (info) => set((state) => ({ ...state, ...info })),
       
@@ -421,7 +433,7 @@ export const useResumeStore = create<ResumeState>()(
         references: state.references.filter((ref) => ref.id !== id)
       })),
       
-      resetStore: () => set(initialState)
+      resetStore: () => set(initialStateData)
     }),
     {
       name: 'resume-storage',
