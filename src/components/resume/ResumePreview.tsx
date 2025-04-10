@@ -1,9 +1,8 @@
 
 import { useResumeStore } from "@/store/resume-store";
 import { ExternalLink } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-const ResumePreview = ({ editable = false }) => {
+const ResumePreview = () => {
   const {
     name, title, location, email, phone, linkedin, github,
     summary,
@@ -15,8 +14,7 @@ const ResumePreview = ({ editable = false }) => {
     languages,
     hobbies,
     awards,
-    references,
-    profileImage
+    references
   } = useResumeStore();
   
   // Helper function to filter out empty sections
@@ -42,34 +40,16 @@ const ResumePreview = ({ editable = false }) => {
   return (
     <div className="font-[arial,helvetica,sans-serif] text-black p-6 antialiased text-sm">
       {/* Header - Name and Contact Info */}
-      <header className="mb-1 flex flex-col md:flex-row items-center justify-between">
-        <div className="flex flex-col md:flex-row items-center mb-2 md:mb-0">
-          <div className="mr-4 mb-2 md:mb-0">
-            {profileImage ? (
-              <Avatar className="h-20 w-20 border-2 border-gray-300">
-                <AvatarImage src={profileImage} alt={name} />
-                <AvatarFallback>{name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-              </Avatar>
-            ) : (
-              <Avatar className="h-20 w-20 border-2 border-gray-300">
-                <AvatarFallback>{name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-              </Avatar>
-            )}
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-center md:text-left mb-1">{name}</h1>
-            <div className="text-center md:text-left text-sm">
-              <span>{title}</span>
-              {location && <span> | {location}</span>}
-            </div>
-          </div>
-        </div>
+      <header className="mb-1">
+        <h1 className="text-2xl font-bold text-center mb-1">{name}</h1>
         
-        <div className="text-center md:text-right text-sm">
-          {phone && <div>{phone}</div>}
-          {email && <div><a href={`mailto:${email}`} className="text-blue-600 hover:underline">{email}</a></div>}
-          {linkedin && <div><a href={formatLink(linkedin)} className="text-blue-600 hover:underline">{getLinkText(linkedin)}</a></div>}
-          {github && <div><a href={formatLink(github)} className="text-blue-600 hover:underline">{getLinkText(github)}</a></div>}
+        <div className="text-center text-sm">
+          <span>{location}</span> | 
+          <span> {phone}</span> | 
+          <a href={`mailto:${email}`} className="text-blue-600 hover:underline"> Email</a> | 
+          <a href="#" className="text-blue-600 hover:underline"> Portfolio</a> | 
+          <a href={formatLink(linkedin)} className="text-blue-600 hover:underline"> LinkedIn</a> | 
+          <a href={formatLink(github)} className="text-blue-600 hover:underline"> Github</a>
         </div>
       </header>
 

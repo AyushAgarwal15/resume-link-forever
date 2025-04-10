@@ -11,8 +11,7 @@ import ATSScoreCard from "@/components/resume/ATSScoreCard";
 import EnhancementTips from "@/components/resume/EnhancementTips";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-import { ZoomIn, ZoomOut, Download, Maximize2, Minimize2, ExternalLink } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ZoomIn, ZoomOut, Download, Maximize2, Minimize2 } from "lucide-react";
 
 const ResumeBuilder = () => {
   const resumePreviewRef = useRef<HTMLDivElement>(null);
@@ -110,16 +109,6 @@ const ResumeBuilder = () => {
                 <h2 className="text-xl font-semibold">Resume Preview</h2>
                 
                 <div className="flex items-center gap-2">
-                  <Link to="/resume-full-preview">
-                    <Button 
-                      variant="outline"
-                      size="sm"
-                      className="text-gray-300 hover:text-white"
-                    >
-                      <ExternalLink size={18} className="mr-2" />
-                      Full Preview
-                    </Button>
-                  </Link>
                   <Button 
                     variant="ghost" 
                     size="sm" 
