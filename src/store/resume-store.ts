@@ -1,4 +1,3 @@
-
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -116,7 +115,7 @@ export interface ResumeState {
 
 const generateId = () => Math.random().toString(36).substring(2, 9);
 
-const initialState = {
+const initialState: ResumeState = {
   // Personal Information
   name: 'Ayush Agarwal',
   title: 'Associate Software Engineer',
@@ -178,73 +177,73 @@ const initialState = {
       id: generateId(),
       name: 'HTML',
       level: 5,
-      type: 'hard'
+      type: 'hard' as const
     },
     {
       id: generateId(),
       name: 'CSS',
       level: 5,
-      type: 'hard'
+      type: 'hard' as const
     },
     {
       id: generateId(),
       name: 'JavaScript',
       level: 5,
-      type: 'hard'
+      type: 'hard' as const
     },
     {
       id: generateId(),
       name: 'React.js',
       level: 5,
-      type: 'hard'
+      type: 'hard' as const
     },
     {
       id: generateId(),
       name: 'Next.js',
       level: 4,
-      type: 'hard'
+      type: 'hard' as const
     },
     {
       id: generateId(),
       name: 'TypeScript',
       level: 4,
-      type: 'hard'
+      type: 'hard' as const
     },
     {
       id: generateId(),
       name: 'Tailwind CSS',
       level: 4,
-      type: 'hard'
+      type: 'hard' as const
     },
     {
       id: generateId(),
       name: 'Redux',
       level: 4,
-      type: 'hard'
+      type: 'hard' as const
     },
     {
       id: generateId(),
       name: 'Git',
       level: 4,
-      type: 'hard'
+      type: 'hard' as const
     },
     {
       id: generateId(),
       name: 'Problem Solving',
       level: 4,
-      type: 'soft'
+      type: 'soft' as const
     },
     {
       id: generateId(),
       name: 'Communication',
       level: 4,
-      type: 'soft'
+      type: 'soft' as const
     },
     {
       id: generateId(),
       name: 'Teamwork',
       level: 4,
-      type: 'soft'
+      type: 'soft' as const
     }
   ],
   certifications: [
