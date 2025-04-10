@@ -11,13 +11,23 @@ import ATSScoreCard from "@/components/resume/ATSScoreCard";
 import EnhancementTips from "@/components/resume/EnhancementTips";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-import { ZoomIn, ZoomOut, Download, Maximize2, Minimize2 } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { 
+  ZoomIn, 
+  ZoomOut, 
+  Download, 
+  Maximize2, 
+  Minimize2, 
+  FileText
+} from "lucide-react";
 
 const ResumeBuilder = () => {
   const resumePreviewRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const [scale, setScale] = useState(1);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [paperSize, setPaperSize] = useState<"a4" | "letter" | "legal">("a4");
   const resumeData = useResumeStore((state) => state);
 
   const handleScaleChange = (value: number[]) => {
@@ -47,19 +57,66 @@ const ResumeBuilder = () => {
           scale: 2,
           useCORS: true,
           logging: false,
+          width: resumePreviewRef.current.scrollWidth,
+          height: resumePreviewRef.current.scrollHeight,
+          windowWidth: resumePreviewRef.current.scrollWidth,
+          windowHeight: resumePreviewRef.current.scrollHeight
         });
         
         const imgData = canvas.toDataURL("image/png");
+        
+        // Set PDF dimensions based on paper size
+        let pdfWidth = 210; // A4 width in mm
+        let pdfHeight = 297; // A4 height in mm
+        
+        if (paperSize === "letter") {
+          pdfWidth = 215.9; // Letter width in mm
+          pdfHeight = 279.4; // Letter height in mm
+        } else if (paperSize === "legal") {
+          pdfWidth = 215.9; // Legal width in mm
+          pdfHeight = 355.6; // Legal height in mm
+        }
+        
         const pdf = new jsPDF({
           orientation: "portrait",
           unit: "mm",
-          format: "a4",
+          format: paperSize
         });
         
-        const imgWidth = 210; // A4 width in mm
+        // Calculate image dimensions to fit the PDF
+        const imgWidth = pdfWidth;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
         
-        pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+        if (imgHeight > pdfHeight) {
+          // Content is longer than one page, split into multiple pages
+          const pageCount = Math.ceil(imgHeight / pdfHeight);
+          const imgHeightPerPage = canvas.height / pageCount;
+          
+          for (let i = 0; i < pageCount; i++) {
+            if (i > 0) pdf.addPage();
+            
+            const sourceY = i * imgHeightPerPage;
+            const sourceHeight = Math.min(imgHeightPerPage, canvas.height - sourceY);
+            
+            const tmpCanvas = document.createElement('canvas');
+            tmpCanvas.width = canvas.width;
+            tmpCanvas.height = sourceHeight;
+            
+            const ctx = tmpCanvas.getContext('2d');
+            ctx?.drawImage(
+              canvas, 
+              0, sourceY, canvas.width, sourceHeight,
+              0, 0, canvas.width, sourceHeight
+            );
+            
+            const pageImgData = tmpCanvas.toDataURL('image/png');
+            pdf.addImage(pageImgData, 'PNG', 0, 0, pdfWidth, (sourceHeight * pdfWidth) / canvas.width);
+          }
+        } else {
+          // Content fits on a single page
+          pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+        }
+        
         pdf.save("resume.pdf");
         
         // Restore original scale
@@ -120,6 +177,30 @@ const ResumeBuilder = () => {
                 </div>
               </div>
 
+              {/* Paper Size Selection */}
+              <div className="mb-4">
+                <div className="text-sm font-medium mb-2">Paper Size:</div>
+                <RadioGroup 
+                  defaultValue="a4" 
+                  value={paperSize}
+                  onValueChange={(value) => setPaperSize(value as "a4" | "letter" | "legal")}
+                  className="flex space-x-4"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="a4" id="a4" />
+                    <Label htmlFor="a4" className="cursor-pointer">A4</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="letter" id="letter" />
+                    <Label htmlFor="letter" className="cursor-pointer">Letter</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="legal" id="legal" />
+                    <Label htmlFor="legal" className="cursor-pointer">Legal</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+
               <div className="flex justify-center items-center gap-4 mb-4">
                 <Button 
                   variant="outline" 
@@ -172,9 +253,9 @@ const ResumeBuilder = () => {
                   >
                     <div 
                       ref={resumePreviewRef} 
-                      className="bg-white text-black min-h-[1056px] w-full"
+                      className="bg-white text-black w-full"
                     >
-                      <ResumePreview />
+                      <ResumePreview paperSize={paperSize} />
                     </div>
                   </div>
                 </Draggable>
