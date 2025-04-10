@@ -1,4 +1,3 @@
-
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -62,6 +61,14 @@ export type Reference = {
   phone?: string;
 };
 
+export type CustomSection = {
+  id: string;
+  title: string;
+  content: string;
+  visible: boolean;
+  order: number;
+};
+
 export interface ResumeState {
   // Personal Information
   name: string;
@@ -71,6 +78,7 @@ export interface ResumeState {
   phone: string;
   linkedin: string;
   github: string;
+  profileImage?: string;
   
   // Professional Summary
   summary: string;
@@ -85,6 +93,21 @@ export interface ResumeState {
   hobbies: string[];
   awards: string[];
   references: Reference[];
+  customSections: CustomSection[];
+  
+  // Section Visibility
+  visibleSections: {
+    summary: boolean;
+    experience: boolean;
+    education: boolean;
+    skills: boolean;
+    projects: boolean;
+    certifications: boolean;
+    languages: boolean;
+    hobbies: boolean;
+    awards: boolean;
+    references: boolean;
+  };
   
   // Actions
   updatePersonalInfo: (info: Partial<ResumeState>) => void;
@@ -111,6 +134,11 @@ export interface ResumeState {
   addReference: (reference: Omit<Reference, 'id'>) => void;
   updateReference: (id: string, reference: Partial<Reference>) => void;
   removeReference: (id: string) => void;
+  addCustomSection: (section: Omit<CustomSection, 'id'>) => void;
+  updateCustomSection: (id: string, section: Partial<CustomSection>) => void;
+  removeCustomSection: (id: string) => void;
+  toggleSectionVisibility: (section: keyof ResumeState['visibleSections']) => void;
+  setProfileImage: (image: string) => void;
   resetStore: () => void;
 }
 
@@ -123,7 +151,8 @@ type ResumeStateData = Omit<ResumeState,
   'removeSkill' | 'addCertification' | 'updateCertification' | 'removeCertification' |
   'addProject' | 'updateProject' | 'removeProject' | 'addLanguage' | 'updateLanguage' |
   'removeLanguage' | 'updateHobbies' | 'updateAwards' | 'addReference' | 'updateReference' |
-  'removeReference' | 'resetStore'
+  'removeReference' | 'addCustomSection' | 'updateCustomSection' | 'removeCustomSection' |
+  'toggleSectionVisibility' | 'setProfileImage' | 'resetStore'
 >;
 
 // Create the initial state with only the data properties
@@ -136,6 +165,7 @@ const initialStateData: ResumeStateData = {
   phone: '(+91) 8126749140',
   linkedin: 'linkedin.com/in/example',
   github: 'github.com/example',
+  profileImage: undefined,
   
   // Professional Summary
   summary: 'Experienced frontend developer with expertise in React.js, Next.js, and TypeScript. Passionate about creating high-performance, user-friendly web applications.',
@@ -321,7 +351,22 @@ const initialStateData: ResumeStateData = {
   ],
   hobbies: ['Coding', 'Reading', 'Gaming', 'Hiking'],
   awards: [],
-  references: []
+  references: [],
+  customSections: [],
+  
+  // Section Visibility
+  visibleSections: {
+    summary: true,
+    experience: true,
+    education: true,
+    skills: true,
+    projects: true,
+    certifications: true,
+    languages: true,
+    hobbies: true,
+    awards: true,
+    references: true
+  }
 };
 
 export const useResumeStore = create<ResumeState>()(
@@ -432,6 +477,29 @@ export const useResumeStore = create<ResumeState>()(
       removeReference: (id) => set((state) => ({
         references: state.references.filter((ref) => ref.id !== id)
       })),
+      
+      addCustomSection: (section) => set((state) => ({
+        customSections: [...state.customSections, { ...section, id: generateId() }]
+      })),
+      
+      updateCustomSection: (id, section) => set((state) => ({
+        customSections: state.customSections.map((sect) => 
+          sect.id === id ? { ...sect, ...section } : sect
+        )
+      })),
+      
+      removeCustomSection: (id) => set((state) => ({
+        customSections: state.customSections.filter((sect) => sect.id !== id)
+      })),
+      
+      toggleSectionVisibility: (section) => set((state) => ({
+        visibleSections: {
+          ...state.visibleSections,
+          [section]: !state.visibleSections[section]
+        }
+      })),
+      
+      setProfileImage: (image) => set({ profileImage: image }),
       
       resetStore: () => set(initialStateData)
     }),
