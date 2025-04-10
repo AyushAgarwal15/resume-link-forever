@@ -39,224 +39,173 @@ const ResumePreview = () => {
 
   return (
     <div className="font-[arial,helvetica,sans-serif] text-black p-6 antialiased text-sm">
-      {/* Header */}
-      <header className="mb-4 text-center">
-        <h1 className="text-2xl font-bold mb-1">{name || "Your Name"}</h1>
+      {/* Header - Name and Contact Info */}
+      <header className="mb-1">
+        <h1 className="text-2xl font-bold text-center mb-1">Ayush Agarwal</h1>
         
-        <div className="flex flex-wrap justify-center gap-x-2 text-sm">
-          {location && <span>{location}</span>}
-          {(location && phone) && <span>|</span>}
-          {phone && <span>{phone}</span>}
-          {((location || phone) && email) && <span>|</span>}
-          {email && <span><a href={`mailto:${email}`} className="text-blue-600 hover:underline">{email}</a></span>}
-          {((location || phone || email) && github) && <span>|</span>}
-          {github && <span><a href={formatLink(github)} target="_blank" className="text-blue-600 hover:underline">{getLinkText(github)}</a></span>}
-          {((location || phone || email || github) && linkedin) && <span>|</span>}
-          {linkedin && <span><a href={formatLink(linkedin)} target="_blank" className="text-blue-600 hover:underline">{getLinkText(linkedin)}</a></span>}
+        <div className="text-center text-sm">
+          <span>Bijnor, UP, India (Relocation Possible)</span> | 
+          <span> (+91) 8126749140</span> | 
+          <a href="mailto:example@gmail.com" className="text-blue-600 hover:underline"> Email</a> | 
+          <a href="#" className="text-blue-600 hover:underline"> Portfolio</a> | 
+          <a href="https://linkedin.com/in/example" className="text-blue-600 hover:underline"> LinkedIn</a> | 
+          <a href="https://github.com/example" className="text-blue-600 hover:underline"> Github</a>
         </div>
       </header>
 
-      <hr className="border-t border-gray-800 mb-3" />
+      <hr className="border-t border-black mb-2" />
 
-      {/* Summary - Optional in this template */}
-      {summary && (
-        <>
-          <section className="mb-3">
-            <h2 className="font-bold uppercase text-base mb-1">Professional Summary</h2>
-            <p className="text-sm">{summary}</p>
-          </section>
-          <hr className="border-t border-gray-800 mb-3" />
-        </>
-      )}
-
-      {/* Experience */}
-      {hasContent(workExperiences) && (
-        <section className="mb-3">
-          <h2 className="font-bold uppercase text-base mb-1">Experience</h2>
-          
-          <div className="space-y-4">
-            {workExperiences.map((exp) => (
-              <div key={exp.id} className="mb-3">
-                <div className="flex justify-between items-start mb-1">
-                  <div>
-                    <span className="font-bold">{exp.company}</span>
-                    {exp.role && <span> - {exp.role}</span>}
-                  </div>
-                  <div className="text-right">
-                    <div>{exp.startDate} - {exp.current ? 'Present' : exp.endDate}</div>
-                  </div>
-                </div>
-                
-                {exp.description && <p className="mb-1">{exp.description}</p>}
-                
-                {hasContent(exp.responsibilities) && (
-                  <ul className="list-disc pl-5 space-y-1">
-                    {exp.responsibilities.map((resp, idx) => (
-                      <li key={idx}>{resp}</li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            ))}
+      {/* Experience Section */}
+      <section className="mb-2">
+        <h2 className="font-bold uppercase text-sm mb-1">Experience</h2>
+        
+        <div className="mb-1">
+          <a href="#" className="font-bold text-blue-600 hover:underline">Mile9</a> 
+          <span> (A Product Based Tech Startup)</span>
+        </div>
+        
+        {/* First Job */}
+        <div className="mb-2">
+          <div className="flex justify-between">
+            <span className="font-bold">Associate Software Engineer</span>
+            <span className="text-right">Remote, India</span>
           </div>
-          <hr className="border-t border-gray-800 mb-3" />
-        </section>
-      )}
-
-      {/* Skills */}
-      {hasContent(skills) && (
-        <section className="mb-3">
-          <h2 className="font-bold uppercase text-base mb-1">Skills</h2>
-          
-          {hasContent(hardSkills) && (
-            <div className="mb-2">
-              <p className="mb-1">
-                <span className="font-bold">Technical Skills: </span>
-                {hardSkills.map((skill, idx) => (
-                  <span key={skill.id}>
-                    {skill.name}{idx < hardSkills.length - 1 ? ', ' : ''}
-                  </span>
-                ))}
-              </p>
-            </div>
-          )}
-          
-          {hasContent(softSkills) && (
-            <div>
-              <p className="mb-1">
-                <span className="font-bold">Soft Skills: </span>
-                {softSkills.map((skill, idx) => (
-                  <span key={skill.id}>
-                    {skill.name}{idx < softSkills.length - 1 ? ', ' : ''}
-                  </span>
-                ))}
-              </p>
-            </div>
-          )}
-          <hr className="border-t border-gray-800 mb-3" />
-        </section>
-      )}
-
-      {/* Projects */}
-      {hasContent(projects) && (
-        <section className="mb-3">
-          <h2 className="font-bold uppercase text-base mb-1">Projects</h2>
-          
-          <div className="space-y-2">
-            {projects.map((project, idx) => (
-              <div key={project.id} className="mb-2">
-                <div className="flex justify-between">
-                  <span className="font-bold">
-                    {idx + 1}. {project.name}{' '}
-                    {project.link && (
-                      <a href={formatLink(project.link)} target="_blank" className="text-blue-600 hover:underline ml-1">
-                        Github Live
-                      </a>
-                    )}
-                  </span>
-                </div>
-                <p className="mb-1">{project.description}</p>
-                
-                {hasContent(project.technologies) && (
-                  <p>
-                    <span className="font-bold">Tech Stack: </span>
-                    {project.technologies.join(', ')}
-                  </p>
-                )}
-              </div>
-            ))}
+          <div className="flex justify-between mb-1">
+            <span>March 2024 - Present</span>
           </div>
-          <hr className="border-t border-gray-800 mb-3" />
-        </section>
-      )}
+          
+          <ul className="list-disc pl-5 mb-1">
+            <li className="mb-1">
+              <span className="font-bold">Portfolio Development:</span> Built a high-performance, responsive company portfolio site with Next.js, boosting user engagement by 30-40% through optimized performance and enhanced interactivity.
+            </li>
+            <li className="mb-1">
+              <span className="font-bold">Code Optimization:</span> Refactored React components and optimized state management, reducing the codebase by 40% and improving load time by 35%.
+            </li>
+            <li className="mb-1">
+              <span className="font-bold">Feature Enhancement:</span> Spearheaded the implementation of new features, enhancing application functionality and user experience, resulting in a 25-30% increase in user satisfaction and retention.
+            </li>
+            <li className="mb-1">
+              <span className="font-bold">Bug Fixing & Testing:</span> Conducted thorough end-to-end testing from a developer's perspective, identifying and resolving bugs to maintain a 100% bug-free system.
+            </li>
+            <li>
+              <span className="font-bold">Tech Stack:</span> HTML, CSS, JavaScript, React.js, Next.js, Redux, TypeScript, Tailwind CSS, Git, Github, React Query, React Table etc.
+            </li>
+          </ul>
+        </div>
+        
+        {/* Second Job */}
+        <div>
+          <div className="flex justify-between">
+            <span className="font-bold">Frontend Developer Intern</span>
+            <span className="text-right">Remote, India</span>
+          </div>
+          <div className="flex justify-between mb-1">
+            <span>October 2023 - February 2024</span>
+          </div>
+          
+          <ul className="list-disc pl-5 mb-1">
+            <li className="mb-1">
+              <span className="font-bold">Developed Core Features:</span> Implemented a comprehensive billing form system, report review comments, and patient data filtering modal, improving system functionality by 40-50% and streamlining user workflows.
+            </li>
+            <li className="mb-1">
+              <span className="font-bold">Bug Resolution & Testing:</span> Ensured a seamless user experience by conducting rigorous debugging and QA testing, reducing bugs by 40% and enhancing overall application stability.
+            </li>
+            <li>
+              <span className="font-bold">Tech Stack:</span> Leveraged a tech stack including React.js, Next.js, TypeScript, and Tailwind CSS to work on company projects, reducing development time by 60%.
+            </li>
+          </ul>
+        </div>
+      </section>
+      
+      <hr className="border-t border-black mb-2" />
+
+      {/* Skills Section */}
+      <section className="mb-2">
+        <h2 className="font-bold uppercase text-sm mb-1">Skills</h2>
+        
+        <ul className="list-disc pl-5">
+          <li className="mb-1">
+            <span className="font-bold">Frontend Development:</span> HTML, CSS, JavaScript, React.js, Next.js, TypeScript, Tailwind CSS, Redux, React Query, Bootstrap, Responsive Web Design, Performance Optimization.
+          </li>
+          <li className="mb-1">
+            <span className="font-bold">Programming Languages:</span> JavaScript, Core Java, Python, C/C++.
+          </li>
+          <li>
+            <span className="font-bold">Version Control:</span> Git, GitHub.
+          </li>
+        </ul>
+      </section>
+      
+      <hr className="border-t border-black mb-2" />
+
+      {/* Projects Section */}
+      <section className="mb-2">
+        <h2 className="font-bold uppercase text-sm mb-1">Projects</h2>
+        
+        <div className="mb-1">
+          <div>
+            <span className="mr-1">1. <span className="font-bold">Social Bond</span> - A Social Media App</span>
+            <a href="#" className="text-blue-600 hover:underline float-right">Github Live</a>
+          </div>
+          <ul className="list-disc pl-5 mb-1">
+            <li className="mb-1">Developed a feature-rich social platform with secure authentication, post management, and user profiles, attracting 20+ users who praised the intuitive UI.</li>
+            <li><span className="font-bold">Tech Stack:</span> React.js, Tailwind CSS, React Query, TypeScript, Appwrite.</li>
+          </ul>
+        </div>
+        
+        <div className="mb-1">
+          <div>
+            <span className="mr-1">2. <span className="font-bold">Hirix</span> - A Job Portal</span>
+            <a href="#" className="text-blue-600 hover:underline float-right">Github Live</a>
+          </div>
+          <ul className="list-disc pl-5 mb-1">
+            <li className="mb-1">Created a job portal that enables job listings, search & filtering, applications, and applicant tracking, attracting more than 20 active users who engaged with job listings and submitted applications.</li>
+            <li><span className="font-bold">Tech Stack:</span> React.js, Tailwind CSS, Supabase (Backend), Clerk (Auth), React Hook Form.</li>
+          </ul>
+        </div>
+        
+        <div>
+          <div>
+            <span className="mr-1">3. <span className="font-bold">Sumit</span> - AI-Powered Article Summarizer</span>
+            <a href="#" className="text-blue-600 hover:underline float-right">Github Live</a>
+          </div>
+          <ul className="list-disc pl-5 mb-1">
+            <li className="mb-1">Implemented an AI-powered tool using OpenAI GPT-4 to convert long articles into concise summaries, with over 100 users trying the tool and benefiting from reduced article length by 70%, on average.</li>
+            <li><span className="font-bold">Tech Stack:</span> React.js, Redux, Tailwind CSS, Local Storage, OpenAI API.</li>
+          </ul>
+        </div>
+      </section>
+      
+      <hr className="border-t border-black mb-2" />
 
       {/* Certifications & Achievements */}
-      {hasContent(certifications) || hasContent(awards) ? (
-        <section className="mb-3">
-          <h2 className="font-bold uppercase text-base mb-1">Certification & Achievements</h2>
-          
-          {hasContent(certifications) && (
-            <ul className="list-disc pl-5 mb-2">
-              {certifications.map((cert) => (
-                <li key={cert.id}>
-                  <span className="font-bold">{cert.name}</span>
-                  {cert.issuer && <span> - {cert.issuer}</span>}
-                  {cert.date && <span> ({cert.date})</span>}
-                </li>
-              ))}
-            </ul>
-          )}
-          
-          {hasContent(awards) && (
-            <ul className="list-disc pl-5">
-              {awards.map((award, idx) => (
-                <li key={idx}>{award}</li>
-              ))}
-            </ul>
-          )}
-          <hr className="border-t border-gray-800 mb-3" />
-        </section>
-      ) : null}
+      <section className="mb-2">
+        <h2 className="font-bold uppercase text-sm mb-1">Certification & Achievements</h2>
+        
+        <ul className="list-disc pl-5">
+          <li className="mb-0.5"><a href="#" className="text-blue-600 hover:underline">The Frontend Developer Career Path</a></li>
+          <li className="mb-0.5"><a href="#" className="text-blue-600 hover:underline">Responsive Web Design</a></li>
+          <li className="mb-0.5"><a href="#" className="text-blue-600 hover:underline">Version Control</a></li>
+          <li><a href="#" className="text-blue-600 hover:underline">Programming with JavaScript</a></li>
+        </ul>
+      </section>
+      
+      <hr className="border-t border-black mb-2" />
 
       {/* Education */}
-      {hasContent(education) && (
-        <section className="mb-3">
-          <h2 className="font-bold uppercase text-base mb-1">Education</h2>
-          
-          <div className="space-y-2">
-            {education.map((edu) => (
-              <div key={edu.id} className="flex justify-between">
-                <div>
-                  <span className="font-bold">{edu.degree}</span>
-                  {edu.institution && <span> in {edu.institution}</span>}
-                </div>
-                <div>
-                  <span>{edu.startDate} - {edu.current ? 'Present' : edu.endDate}</span>
-                </div>
-              </div>
-            ))}
+      <section>
+        <h2 className="font-bold uppercase text-sm mb-1">Education</h2>
+        
+        <div className="flex justify-between">
+          <div>
+            <span>2019 - 2023</span>
+            <span className="ml-4 font-bold">Bachelor of Technology (B.Tech) in Computer Science & Engineering (CGPA: 8.14/10)</span>
           </div>
-        </section>
-      )}
-
-      {/* Optional sections - Languages, Hobbies, References */}
-      {hasContent(languages) && (
-        <section className="mt-3">
-          <h2 className="font-bold uppercase text-base mb-1">Languages</h2>
-          <p>
-            {languages.map((lang, idx) => (
-              <span key={lang.id}>
-                {lang.name} ({lang.level.charAt(0).toUpperCase() + lang.level.slice(1)})
-                {idx < languages.length - 1 ? ', ' : ''}
-              </span>
-            ))}
-          </p>
-        </section>
-      )}
-
-      {hasContent(hobbies) && (
-        <section className="mt-3">
-          <h2 className="font-bold uppercase text-base mb-1">Interests</h2>
-          <p>{hobbies.join(', ')}</p>
-        </section>
-      )}
-
-      {hasContent(references) && (
-        <section className="mt-3">
-          <h2 className="font-bold uppercase text-base mb-1">References</h2>
-          
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {references.map((ref) => (
-              <div key={ref.id}>
-                <p className="font-bold">{ref.name}</p>
-                <p>{ref.position} at {ref.company}</p>
-                <p>Email: {ref.email}</p>
-                {ref.phone && <p>Phone: {ref.phone}</p>}
-              </div>
-            ))}
+          <div>
+            <span>MIIT, Meerut</span>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
     </div>
   );
 };
