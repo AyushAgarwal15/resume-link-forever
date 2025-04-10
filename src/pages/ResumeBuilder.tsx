@@ -1,7 +1,6 @@
 
 import { useState, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { motion } from "framer-motion";
 import Draggable from "react-draggable";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -160,14 +159,15 @@ const ResumeBuilder = () => {
                   bounds="parent"
                   disabled={!isFullscreen}
                 >
-                  <motion.div
+                  <div
                     className="origin-top-left bg-white"
                     style={{ 
                       transform: `scale(${scale})`,
                       width: '100%',
                       backgroundColor: 'white',
                       cursor: isFullscreen ? 'grab' : 'default',
-                      boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)'
+                      boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
+                      transition: 'transform 0.2s ease-in-out'
                     }}
                   >
                     <div 
@@ -176,7 +176,7 @@ const ResumeBuilder = () => {
                     >
                       <ResumePreview />
                     </div>
-                  </motion.div>
+                  </div>
                 </Draggable>
               </div>
 
