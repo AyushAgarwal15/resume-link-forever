@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import ResumeView from "./pages/ResumeView";
 import HowItWorks from "./pages/HowItWorks";
 import ResumeBuilder from "./pages/ResumeBuilder";
+import ResumeFullPreview from "./pages/ResumeFullPreview";
 import NotFound from "./pages/NotFound";
 
 // Create a client
@@ -49,6 +50,7 @@ const App = () => {
               <Route path="/r/:username" element={<ResumeView />} />
               <Route path="/how-it-works" element={<HowItWorks />} />
               <Route path="/resume-builder" element={<ResumeBuilder />} />
+              <Route path="/resume-full-preview" element={<ResumeFullPreview />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
