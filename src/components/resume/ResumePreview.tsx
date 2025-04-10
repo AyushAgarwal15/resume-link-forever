@@ -11,6 +11,7 @@ const ResumePreview = () => {
     skills,
     certifications,
     projects,
+    languages,
     hobbies,
     awards,
     references
@@ -82,7 +83,6 @@ const ResumePreview = () => {
                     {exp.role && <span> - {exp.role}</span>}
                   </div>
                   <div className="text-right">
-                    {exp.location && <div>{exp.location}</div>}
                     <div>{exp.startDate} - {exp.current ? 'Present' : exp.endDate}</div>
                   </div>
                 </div>
