@@ -1,14 +1,24 @@
-
 import { Button } from "@/components/ui/button";
+import { resumeApi } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
 import { Download, ExternalLink } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 const ResumeView = () => {
-  const { username } = useParams<{ username: string }>();
-  
+  const { resumeSlug } = useParams<{ resumeSlug: string }>();
+
+  // use getresume api we created in api.ts
+  const { data: resume, isLoading } = useQuery({
+    queryKey: ["resume", resumeSlug],
+    queryFn: () => resumeApi.getResume({ resumeSlug }),
+  });
+
+  console.log(resume);
+
   // In a real app, we would fetch the resume based on the username parameter
   const mockResume = {
-    user: username || "john-doe",
+    user: resumeSlug || "john-doe",
+
     resumeName: "Professional Resume",
     fileType: "pdf",
     updatedAt: "2025-04-01",
@@ -29,7 +39,10 @@ const ResumeView = () => {
                 <Download className="h-4 w-4 mr-2" />
                 Download
               </Button>
-              <Button size="sm" className="bg-brand-blue hover:bg-brand-blue/90">
+              <Button
+                size="sm"
+                className="bg-brand-blue hover:bg-brand-blue/90"
+              >
                 <ExternalLink className="h-4 w-4 mr-2" />
                 Open Original
               </Button>
@@ -37,7 +50,7 @@ const ResumeView = () => {
           </div>
         </div>
       </header>
-      
+
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between">
@@ -50,13 +63,15 @@ const ResumeView = () => {
               </p>
             </div>
           </div>
-          
+
           <div className="bg-white shadow-lg rounded-lg border overflow-hidden">
             <div className="p-8 flex items-center justify-center">
               {/* This would be replaced by an actual PDF/resume viewer */}
               <div className="w-full aspect-[1/1.4] border border-dashed border-gray-300 rounded flex items-center justify-center p-4">
                 <div className="text-center">
-                  <p className="text-xl font-medium text-gray-700 mb-2">Resume Preview</p>
+                  <p className="text-xl font-medium text-gray-700 mb-2">
+                    Resume Preview
+                  </p>
                   <p className="text-gray-500 mb-4">
                     This is a placeholder for the actual resume viewer
                   </p>
@@ -70,11 +85,15 @@ const ResumeView = () => {
           </div>
         </div>
       </main>
-      
+
       <footer className="py-6 border-t">
         <div className="container mx-auto px-4">
           <p className="text-center text-gray-500 text-sm">
-            Powered by <a href="/" className="text-brand-blue hover:underline">ResumeLink</a> - Always share your latest resume
+            Powered by{" "}
+            <a href="/" className="text-brand-blue hover:underline">
+              ResumeLink
+            </a>{" "}
+            - Always share your latest resume
           </p>
         </div>
       </footer>
