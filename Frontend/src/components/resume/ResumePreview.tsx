@@ -1,6 +1,5 @@
 import { useResumeSelector } from "@/store/hooks";
-import { ExternalLink } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Language, Skill } from "@/store/resume-store";
 
 const ResumePreview = ({ editable = false }) => {
   const {
@@ -25,11 +24,7 @@ const ResumePreview = ({ editable = false }) => {
   } = useResumeSelector((state) => state);
 
   // Helper function to filter out empty sections
-  const hasContent = (arr: any[]) => arr && arr.length > 0;
-
-  // Get hard and soft skills
-  const hardSkills = skills.filter((skill) => skill.type === "hard");
-  const softSkills = skills.filter((skill) => skill.type === "soft");
+  const hasContent = <T,>(arr: T[]): boolean => arr && arr.length > 0;
 
   // Format links as URLs
   const formatLink = (link: string) => {
@@ -45,224 +40,245 @@ const ResumePreview = ({ editable = false }) => {
   };
 
   return (
-    <div className="font-[arial,helvetica,sans-serif] text-black p-6 antialiased text-sm">
-      {/* Header - Name and Contact Info */}
-      <header className="mb-1 flex flex-col md:flex-row items-center justify-between">
-        <div className="flex flex-col md:flex-row items-center mb-2 md:mb-0">
-          <div className="mr-4 mb-2 md:mb-0">
-            {profileImage ? (
-              <Avatar className="h-20 w-20 border-2 border-gray-300">
-                <AvatarImage src={profileImage} alt={name} />
-                <AvatarFallback>
-                  {name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                </AvatarFallback>
-              </Avatar>
-            ) : (
-              <Avatar className="h-20 w-20 border-2 border-gray-300">
-                <AvatarFallback>
-                  {name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                </AvatarFallback>
-              </Avatar>
-            )}
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-center md:text-left mb-1">
+    <div className="font-[arial,helvetica,sans-serif] text-black antialiased">
+      <div className="grid grid-cols-4 gap-10 p-14">
+        {/* Main Content - Left Side (3 columns) */}
+        <div className="col-span-3">
+          <div className="text-left">
+            <h1 className="text-3xl font-bold leading-tight text-gray-900">
               {name}
             </h1>
-            <div className="text-center md:text-left text-sm">
-              <span>{title}</span>
-              {location && <span> | {location}</span>}
-            </div>
-          </div>
-        </div>
+            <p className="text-xl text-gray-600">{title}</p>
 
-        <div className="text-center md:text-right text-sm">
-          {phone && <div>{phone}</div>}
-          {email && (
-            <div>
-              <a
-                href={`mailto:${email}`}
-                className="text-blue-600 hover:underline"
-              >
-                {email}
-              </a>
-            </div>
-          )}
-          {linkedin && (
-            <div>
-              <a
-                href={formatLink(linkedin)}
-                className="text-blue-600 hover:underline"
-              >
-                {getLinkText(linkedin)}
-              </a>
-            </div>
-          )}
-          {github && (
-            <div>
-              <a
-                href={formatLink(github)}
-                className="text-blue-600 hover:underline"
-              >
-                {getLinkText(github)}
-              </a>
-            </div>
-          )}
-        </div>
-      </header>
-
-      <hr className="border-t border-black mb-2" />
-
-      {/* Experience Section */}
-      <section className="mb-2">
-        <h2 className="font-bold uppercase text-sm mb-1">Experience</h2>
-
-        {workExperiences.map((exp, index) => (
-          <div
-            key={exp.id}
-            className={index !== workExperiences.length - 1 ? "mb-2" : ""}
-          >
-            <div className="mb-1">
-              <a href="#" className="font-bold text-blue-600 hover:underline">
-                {exp.company.split("(")[0].trim()}
-              </a>
-              {exp.company.includes("(") && (
-                <span> ({exp.company.split("(")[1].replace(")", "")})</span>
+            {/* Contact details in horizontal layout */}
+            <div className="flex flex-wrap gap-4 mt-2 text-sm text-gray-600">
+              {email && (
+                <a href={`mailto:${email}`} className="hover:text-gray-900">
+                  {email}
+                </a>
               )}
-            </div>
-
-            <div className="flex justify-between">
-              <span className="font-bold">{exp.role}</span>
-              <span className="text-right">{exp.description}</span>
-            </div>
-            <div className="flex justify-between mb-1">
-              <span>
-                {exp.startDate} - {exp.current ? "Present" : exp.endDate}
-              </span>
-            </div>
-
-            <ul className="list-disc pl-5 mb-1">
-              {exp.responsibilities.map((resp, i) => (
-                <li
-                  key={i}
-                  className={
-                    i !== exp.responsibilities.length - 1 ? "mb-1" : ""
-                  }
-                >
-                  {resp}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </section>
-
-      <hr className="border-t border-black mb-2" />
-
-      {/* Skills Section */}
-      <section className="mb-2">
-        <h2 className="font-bold uppercase text-sm mb-1">Skills</h2>
-
-        <ul className="list-disc pl-5">
-          <li className="mb-1">
-            <span className="font-bold">Frontend Development:</span> HTML, CSS,
-            JavaScript, React.js, Next.js, TypeScript, Tailwind CSS, Redux,
-            React Query, Bootstrap, Responsive Web Design, Performance
-            Optimization.
-          </li>
-          <li className="mb-1">
-            <span className="font-bold">Programming Languages:</span>{" "}
-            JavaScript, Core Java, Python, C/C++.
-          </li>
-          <li>
-            <span className="font-bold">Version Control:</span> Git, GitHub.
-          </li>
-        </ul>
-      </section>
-
-      <hr className="border-t border-black mb-2" />
-
-      {/* Projects Section */}
-      <section className="mb-2">
-        <h2 className="font-bold uppercase text-sm mb-1">Projects</h2>
-
-        {projects.map((project, index) => (
-          <div
-            key={project.id}
-            className={index !== projects.length - 1 ? "mb-1" : ""}
-          >
-            <div>
-              <span className="mr-1">
-                {index + 1}. <span className="font-bold">{project.name}</span>
-              </span>
-              {project.link && (
-                <a
-                  href={formatLink(project.link)}
-                  className="text-blue-600 hover:underline float-right"
-                >
-                  Github Live
+              {phone && <span>{phone}</span>}
+              {location && <span>{location}</span>}
+              {linkedin && (
+                <a href={formatLink(linkedin)} className="hover:text-gray-900">
+                  {getLinkText(linkedin)}
+                </a>
+              )}
+              {github && (
+                <a href={formatLink(github)} className="hover:text-gray-900">
+                  {getLinkText(github)}
                 </a>
               )}
             </div>
-            <ul className="list-disc pl-5 mb-1">
-              <li className="mb-1">{project.description}</li>
-              <li>
-                <span className="font-bold">Tech Stack:</span>{" "}
-                {project.technologies.join(", ")}
-              </li>
-            </ul>
           </div>
-        ))}
-      </section>
 
-      <hr className="border-t border-black mb-2" />
-
-      {/* Certifications & Achievements */}
-      <section className="mb-2">
-        <h2 className="font-bold uppercase text-sm mb-1">
-          Certification & Achievements
-        </h2>
-
-        <ul className="list-disc pl-5">
-          {certifications.map((cert, index) => (
-            <li
-              key={cert.id}
-              className={index !== certifications.length - 1 ? "mb-0.5" : ""}
-            >
-              <a href="#" className="text-blue-600 hover:underline">
-                {cert.name}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <hr className="border-t border-black mb-2" />
-
-      {/* Education */}
-      <section>
-        <h2 className="font-bold uppercase text-sm mb-1">Education</h2>
-
-        {education.map((edu) => (
-          <div key={edu.id} className="flex justify-between">
-            <div>
-              <span>
-                {edu.startDate} - {edu.current ? "Present" : edu.endDate}
-              </span>
-              <span className="ml-4 font-bold">{edu.degree}</span>
+          {/* Profile/Summary Section */}
+          {summary && (
+            <div className="my-10">
+              <h2 className="mb-2 text-2xl font-semibold text-gray-900">
+                Profile
+              </h2>
+              <p className="text-gray-700">{summary}</p>
             </div>
-            <div>
-              <span>{edu.institution}</span>
+          )}
+
+          {/* Experience Section */}
+          {hasContent(workExperiences) && (
+            <div className="my-10">
+              <h2 className="text-2xl font-semibold text-gray-900">
+                Experience
+              </h2>
+              <div className="mt-6">
+                {workExperiences.map((experience) => (
+                  <div key={experience.id} className="mb-6">
+                    <h3 className="text-xl font-semibold text-gray-900">
+                      {experience.role} @ {experience.company}
+                    </h3>
+                    <p className="text-gray-600">
+                      {experience.startDate} -{" "}
+                      {experience.current ? "Present" : experience.endDate}
+                    </p>
+                    <div className="mt-2 text-gray-700">
+                      <p>{experience.description}</p>
+                      {experience.responsibilities &&
+                        experience.responsibilities.length > 0 && (
+                          <ul className="list-disc ml-5 mt-2">
+                            {experience.responsibilities.map((resp, i) => (
+                              <li key={i} className="mt-1">
+                                {resp}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
-      </section>
+          )}
+
+          {/* Projects Section */}
+          {hasContent(projects) && (
+            <div className="my-10">
+              <h2 className="text-2xl font-semibold text-gray-900">Projects</h2>
+              <div className="mt-6">
+                {projects.map((project) => (
+                  <div key={project.id} className="mb-6">
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-xl font-semibold text-gray-900">
+                        {project.name}
+                      </h3>
+                      {project.link && (
+                        <a
+                          href={formatLink(project.link)}
+                          className="text-blue-600 hover:underline text-sm"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          View Project
+                        </a>
+                      )}
+                    </div>
+                    <p className="mt-2 text-gray-700">{project.description}</p>
+                    {project.technologies &&
+                      project.technologies.length > 0 && (
+                        <div className="mt-2">
+                          <span className="text-sm text-gray-600">
+                            Technologies:{" "}
+                          </span>
+                          <span className="text-sm text-gray-700">
+                            {project.technologies.join(", ")}
+                          </span>
+                        </div>
+                      )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Education Section */}
+          {hasContent(education) && (
+            <div className="my-10">
+              <h2 className="text-2xl font-semibold text-gray-900">
+                Education
+              </h2>
+              <div className="mt-6">
+                {education.map((edu) => (
+                  <div key={edu.id} className="mb-6">
+                    <h3 className="text-xl font-semibold text-gray-900">
+                      {edu.degree}, {edu.institution}
+                    </h3>
+                    <p className="text-gray-600">
+                      {edu.startDate} - {edu.current ? "Present" : edu.endDate}
+                    </p>
+                    {edu.description && (
+                      <p className="mt-2 text-gray-700">{edu.description}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Certifications Section */}
+          {hasContent(certifications) && (
+            <div className="my-10">
+              <h2 className="text-2xl font-semibold text-gray-900">
+                Certifications
+              </h2>
+              <div className="mt-6">
+                {certifications.map((cert) => (
+                  <div key={cert.id} className="mb-3">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      {cert.name}
+                    </h3>
+                    {cert.issuer && (
+                      <p className="text-gray-600">{cert.issuer}</p>
+                    )}
+                    {cert.date && (
+                      <p className="text-gray-600 text-sm">{cert.date}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Sidebar - Right Side (1 column) */}
+        <div className="bg-gray-50 p-6 rounded-lg h-fit">
+          {/* Skills Section */}
+          {hasContent(skills) && (
+            <div className="mb-8">
+              <h2 className="mb-4 text-xl font-bold text-gray-900">Skills</h2>
+              <ul className="flex flex-wrap gap-2">
+                {skills.map((skill) => (
+                  <li
+                    key={skill.id}
+                    className="px-3 py-1 text-sm text-gray-800 bg-gray-100 rounded-full"
+                  >
+                    {skill.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Languages Section */}
+          {hasContent(languages) && (
+            <div className="mb-8">
+              <h2 className="mb-4 text-xl font-bold text-gray-900">
+                Languages
+              </h2>
+              <ul className="space-y-2">
+                {languages.map((language) => (
+                  <li key={language.id} className="text-gray-700">
+                    <span className="font-medium">{language.name}</span>
+                    <span className="text-sm text-gray-600">
+                      {" "}
+                      - {language.level}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Hobbies/Interests Section */}
+          {hasContent(hobbies) && (
+            <div className="mb-8">
+              <h2 className="mb-4 text-xl font-bold text-gray-900">
+                Interests
+              </h2>
+              <ul className="flex flex-wrap gap-2">
+                {hobbies.map((hobby, index) => (
+                  <li
+                    key={index}
+                    className="px-3 py-1 text-sm text-gray-800 bg-gray-100 rounded-full"
+                  >
+                    {hobby}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Awards Section */}
+          {hasContent(awards) && (
+            <div className="mb-8">
+              <h2 className="mb-4 text-xl font-bold text-gray-900">Awards</h2>
+              <ul className="space-y-2">
+                {awards.map((award, index) => (
+                  <li key={index} className="text-gray-700">
+                    <div className="font-medium">{award}</div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
