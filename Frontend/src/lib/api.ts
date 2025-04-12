@@ -85,6 +85,10 @@ export const resumeApi = {
     const response = await api.post<void>("/resumes/update-slug", data);
     return response.data;
   },
+  getResume: async (data: { resumeSlug: string }): Promise<void> => {
+    const response = await api.get<void>(`/resumes/${data.resumeSlug}`);
+    return response.data;
+  },
 };
 
 export default api;

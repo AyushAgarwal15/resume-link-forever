@@ -79,6 +79,7 @@ const App = () => {
 
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />
+            <Route path="/r/:resumeSlug" element={<ResumeView />} />
           </Routes>
         </div>
       </TooltipProvider>

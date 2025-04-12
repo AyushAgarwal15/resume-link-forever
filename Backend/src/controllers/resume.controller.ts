@@ -36,3 +36,42 @@ export const updateResumeSlug = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const getResume = async (req: Request, res: Response) => {
+  const { resumeSlug } = req.params;
+  const activeResume = await prisma.user.findUnique({
+    where: { resumeSlug },
+    select: {
+      activeResumeId: true,
+    },
+  });
+  if (!activeResume?.activeResumeId) {
+    return res.status(404).json({
+      success: false,
+      message: "Resume not found",
+    });
+  }
+
+  const resume = await prisma.resume.findUnique({
+    where: { id: activeResume?.activeResumeId },
+    include: {
+      user: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  if (!resume) {
+    return res.status(404).json({
+      success: false,
+      message: "Resume not found",
+    });
+  }
+  return res.status(200).json({
+    success: true,
+    resume,
+  });
+};
