@@ -1,0 +1,73 @@
+import { useResumeStore, useResumeSelector } from "./unified-store";
+
+// Re-export the hooks for convenience
+export { useResumeStore, useResumeSelector };
+
+// Export a type-safe dispatcher for components that need to dispatch actions
+export const useResumeActions = () => {
+  const {
+    updatePersonalInfo,
+    addWorkExperience,
+    updateWorkExperience,
+    removeWorkExperience,
+    addEducation,
+    updateEducation,
+    removeEducation,
+    addSkill,
+    updateSkill,
+    removeSkill,
+    addCertification,
+    updateCertification,
+    removeCertification,
+    addProject,
+    updateProject,
+    removeProject,
+    addLanguage,
+    updateLanguage,
+    removeLanguage,
+    updateHobbies,
+    updateAwards,
+    addReference,
+    updateReference,
+    removeReference,
+    addCustomSection,
+    updateCustomSection,
+    removeCustomSection,
+    toggleSectionVisibility,
+    setProfileImage,
+    resetStore,
+  } = useResumeStore();
+
+  return {
+    updatePersonalInfo,
+    addWorkExperience,
+    updateWorkExperience,
+    removeWorkExperience,
+    addEducation,
+    updateEducation,
+    removeEducation,
+    addSkill,
+    updateSkill,
+    removeSkill,
+    addCertification,
+    updateCertification,
+    removeCertification,
+    addProject,
+    updateProject,
+    removeProject,
+    addLanguage,
+    updateLanguage,
+    removeLanguage,
+    updateHobbies,
+    updateAwards,
+    addReference,
+    updateReference,
+    removeReference,
+    addCustomSection,
+    updateCustomSection,
+    removeCustomSection,
+    toggleSectionVisibility,
+    setProfileImage,
+    resetStore,
+  };
+};

@@ -1,19 +1,17 @@
-
-import { useAppSelector, useAppDispatch, resumeActions } from "@/store/redux";
+import { useResumeSelector, useResumeActions } from "@/store/hooks";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 const PersonalInfoForm = () => {
-  const { 
-    name, title, location, email, phone, linkedin, github 
-  } = useAppSelector(state => state.resume);
-  const dispatch = useAppDispatch();
-  
+  const { name, title, location, email, phone, linkedin, github } =
+    useResumeSelector((state) => state);
+  const { updatePersonalInfo } = useResumeActions();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    dispatch(resumeActions.updatePersonalInfo({ [name]: value }));
+    updatePersonalInfo({ [name]: value });
   };
-  
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -28,7 +26,7 @@ const PersonalInfoForm = () => {
             className="bg-gray-700/30 border-gray-600"
           />
         </div>
-        
+
         <div className="space-y-2">
           <Label htmlFor="title">Professional Title *</Label>
           <Input
@@ -41,7 +39,7 @@ const PersonalInfoForm = () => {
           />
         </div>
       </div>
-      
+
       <div className="space-y-2">
         <Label htmlFor="location">Location *</Label>
         <Input
@@ -53,7 +51,7 @@ const PersonalInfoForm = () => {
           className="bg-gray-700/30 border-gray-600"
         />
       </div>
-      
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="email">Email Address *</Label>
@@ -67,7 +65,7 @@ const PersonalInfoForm = () => {
             className="bg-gray-700/30 border-gray-600"
           />
         </div>
-        
+
         <div className="space-y-2">
           <Label htmlFor="phone">Phone Number *</Label>
           <Input
@@ -81,7 +79,7 @@ const PersonalInfoForm = () => {
           />
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="linkedin">LinkedIn</Label>
@@ -94,7 +92,7 @@ const PersonalInfoForm = () => {
             className="bg-gray-700/30 border-gray-600"
           />
         </div>
-        
+
         <div className="space-y-2">
           <Label htmlFor="github">GitHub</Label>
           <Input
